@@ -3,7 +3,7 @@
         'name' => 'addispay/addispay-sdk',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'c74aed22e16061f2fdab25d4859debdb9160f4fd',
+        'reference' => 'bd3aa5bdeafc916cff3f07b8d36ceb9b7569abfe',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'addispay/addispay-sdk' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'c74aed22e16061f2fdab25d4859debdb9160f4fd',
+            'reference' => 'bd3aa5bdeafc916cff3f07b8d36ceb9b7569abfe',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

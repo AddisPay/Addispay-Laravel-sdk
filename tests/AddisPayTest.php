@@ -1,92 +1,127 @@
 <?php
 
-namespace AddisPay\AddisPaySDK\Tests;
+namespace AshenafiPixel\AddisPaySDK\Tests;
 
-use Orchestra\Testbench\TestCase;
-use AddisPay\AddisPaySDK\Providers\AddisPayServiceProvider;
-use AddisPay\AddisPaySDK\Facades\AddisPay;
-use AddisPay\AddisPaySDK\Exceptions\AddisPayException;
+use AshenafiPixel\AddisPaySDK\AddisPay;
+use AshenafiPixel\AddisPaySDK\Exceptions\AddisPayException;
+use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Mockery;
 
 class AddisPayTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [AddisPayServiceProvider::class];
-    }
+    protected $addisPay;
+    protected $mockClient;
 
-    protected function getPackageAliases($app)
+    protected function setUp(): void
     {
-        return [
-            'AddisPay' => AddisPay::class,
-        ];
-    }
+        parent::setUp();
 
-    /** @test */
-    public function it_can_initiate_payment()
-    {
         // Mock the Guzzle client
-        $mock = Mockery::mock(Client::class);
-        $mock->shouldReceive('post')
-             ->once()
-             ->andReturn(new Response(200, [], json_encode(['payment_url' => 'https://payment.url'])));
+        $this->mockClient = Mockery::mock(Client::class);
 
-        $this->app->instance(Client::class, $mock);
+        // Create an instance of AddisPay with mocked ApiClient
+        $this->addisPay = new AddisPay();
 
-        $transactionDetail = [
-            'total_amount' => "100",
-            'tx_ref' => "2226787667",
-            'currency' => "ETB",
-            'first_name' => "abebe",
-            'email' => "abebe@gmail.com",
-            'phone_number' => "+251921309013",
-            'last_name' => "kebede",
-            'session_expired' => "5",
-            'nonce' => now()->toIso8601String(),
-            'order_detail' => [
-                'items' => "test item",
-                'description' => "I am testing this",
-            ],
-        ];
+        // Use Reflection to set the ApiClient's client to the mocked client
+        $reflection = new \ReflectionClass($this->addisPay);
+        $apiClientProperty = $reflection->getProperty('apiClient');
+        $apiClientProperty->setAccessible(true);
 
-        $paymentUrl = AddisPay::payNow($transactionDetail, 'public_key');
+        // Create a partial mock of ApiClient to inject the mocked Guzzle client
+        $apiClientMock = Mockery::mock(\AshenafiPixel\AddisPaySDK\ApiClient::class, [
+            'post' => null, // We'll set expectations later
+        ]);
 
-        $this->assertEquals('https://payment.url', $paymentUrl);
+        // Set the mocked ApiClient
+        $apiClientProperty->setValue($this->addisPay, $apiClientMock);
     }
 
-    /** @test */
-    public function it_throws_exception_on_invalid_response()
+    public function testCreatePaymentSuccess()
     {
-        // Mock the Guzzle client
-        $mock = Mockery::mock(Client::class);
-        $mock->shouldReceive('post')
-             ->once()
-             ->andReturn(new Response(200, [], json_encode(['invalid_key' => 'no_url'])));
-
-        $this->app->instance(Client::class, $mock);
-
-        $transactionDetail = [
-            'total_amount' => "100",
-            'tx_ref' => "2226787667",
-            'currency' => "ETB",
-            'first_name' => "abebe",
-            'email' => "abebe@gmail.com",
-            'phone_number' => "+251921309013",
-            'last_name' => "kebede",
-            'session_expired' => "5",
-            'nonce' => now()->toIso8601String(),
+        $paymentData = [
+            'total_amount' => 100,
+            'tx_ref' => 'transaction_reference',
+            'currency' => 'ETB',
+            'first_name' => 'Tilahun',
+            'last_name' => 'Feyissa',
+            'email' => 'sample@gmail.com',
+            'phone_number' => '900000000',
+            'session_expired' => 5000,
+            'nonce' => 'uniqueID',
             'order_detail' => [
-                'items' => "test item",
-                'description' => "I am testing this",
+                'items' => 'rfid',
+                'description' => 'payment for item #4564',
             ],
+            'success_url' => 'https://successURL',
+            'cancel_url' => 'https://cancelSuccessURL',
+            'error_url' => 'https://errorSuccessURL',
+            'message' => 'thank you for using our service',
         ];
 
+        $responseBody = [
+            'amount' => '0.8',
+            'checkout_url' => 'https://checkouts.addispay.et/get-orders',
+            'isCommissioned' => false,
+            'status' => 'Data received successfully',
+            'uuid' => '09782519-0a1f-4b90-aac2-d408515418a5'
+        ];
+
+        // Set expectation on ApiClient's post method
+        $apiClientMock = $this->addisPay->apiClient;
+        $apiClientMock->shouldReceive('post')
+            ->once()
+            ->with('/api/v1/receive-data', Mockery::on(function ($data) use ($paymentData) {
+                // Optional: Add assertions on the structure of $data
+                return isset($data['data']['currency']) &&
+                       isset($data['data']['first_name']) &&
+                       isset($data['data']['email']);
+            }))
+            ->andReturn($responseBody);
+
+        $response = $this->addisPay->createPayment($paymentData);
+
+        $this->assertEquals('https://checkouts.addispay.et/get-orders', $response['checkout_url']);
+        $this->assertEquals('09782519-0a1f-4b90-aac2-d408515418a5', $response['uuid']);
+        $this->assertEquals('0.8', $response['amount']);
+        $this->assertEquals('Data received successfully', $response['status']);
+        $this->assertFalse($response['isCommissioned']);
+    }
+
+    public function testCreatePaymentFailure()
+    {
         $this->expectException(AddisPayException::class);
-        $this->expectExceptionMessage('Invalid response from AddisPay.');
+        $this->expectExceptionMessage("Invalid response from AddisPay API.");
 
-        AddisPay::payNow($transactionDetail, 'public_key');
+        $paymentData = [
+            'total_amount' => 100,
+            'tx_ref' => 'transaction_reference',
+            'currency' => 'ETB',
+            'first_name' => 'Tilahun',
+            'last_name' => 'Feyissa',
+            'email' => 'sample@gmail.com',
+            'phone_number' => '900000000',
+            'session_expired' => 5000,
+            'nonce' => 'uniqueID',
+            'order_detail' => [
+                'items' => 'rfid',
+                'description' => 'payment for item #4564',
+            ],
+            'success_url' => 'https://successURL',
+            'cancel_url' => 'https://cancelSuccessURL',
+            'error_url' => 'https://errorSuccessURL',
+            'message' => 'thank you for using our service',
+        ];
+
+        // Set expectation on ApiClient's post method to return invalid response
+        $apiClientMock = $this->addisPay->apiClient;
+        $apiClientMock->shouldReceive('post')
+            ->once()
+            ->with('/api/v1/receive-data', Mockery::any())
+            ->andReturn(['invalid_key' => 'no_url']);
+
+        $this->addisPay->createPayment($paymentData);
     }
 
     protected function tearDown(): void

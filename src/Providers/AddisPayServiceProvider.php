@@ -1,36 +1,34 @@
 <?php
 
-namespace AddisPay\AddisPaySDK\Providers;
+namespace AshenafiPixel\AddisPaySDK\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use AddisPay\AddisPaySDK\AddisPay;
+use AshenafiPixel\AddisPaySDK\AddisPay;
 
 class AddisPayServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
-     */
-    public function boot()
-    {
-        // Publish configuration
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('addispay.php'),
-        ], 'config');
-    }
-
-    /**
-     * Register the application services.
+     * Register services.
      */
     public function register()
     {
-        // Merge default config
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'addispay'
-        );
-
-        // Bind the AddisPay class
+        // Bind the AddisPay class to the service container
         $this->app->singleton('addispay', function ($app) {
-            return new AddisPay($app['config']->get('addispay'));
+            return new AddisPay();
         });
+
+        // Merge package configuration
+        $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'addispay');
+    }
+
+    /**
+     * Bootstrap services.
+     */
+    public function boot()
+    {
+        // Publish configuration file
+        $this->publishes([
+            __DIR__.'/../Config/config.php' => config_path('addispay.php'),
+        ], 'config');
     }
 }
