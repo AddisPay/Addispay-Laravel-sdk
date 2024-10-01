@@ -29,7 +29,7 @@ A comprehensive Laravel SDK for integrating the AddisPay payment gateway into yo
 
 You can install the AddisPay SDK via Composer. Ensure that you have Composer installed on your system. If not, follow the [Composer installation guide](https://getcomposer.org/download/).
 
-bash/cmd 
+bash/cmd/cmd 
 
 composer require addispay/addispay-sdk
 
@@ -42,7 +42,7 @@ After installation, you need to publish the configuration file and set up your e
 
 Run the following Artisan command to publish the configuration file:
 
-bash
+bash/cmd
 php artisan vendor:publish --provider="addispay\AddisPaySDK\Providers\AddisPayServiceProvider" --tag=config
 
 
@@ -683,7 +683,7 @@ To ensure the SDK functions correctly, comprehensive tests are included. Follow 
 
 Ensure all development dependencies are installed via Composer.
 
-bash
+bash/cmd
 composer install
 
 
@@ -691,7 +691,7 @@ composer install
 
 Execute the PHPUnit tests using the following command:
 
-bash
+bash/cmd
 vendor/bin/phpunit
 
 
@@ -828,7 +828,7 @@ Once your SDK is published on Packagist, merchants can integrate it into their L
 
 ## 1. Install the SDK via Composer
 
-bash
+bash/cmd
 composer require addispay/addispay-sdk
 
 
@@ -836,7 +836,7 @@ composer require addispay/addispay-sdk
 
 If your SDK provides configuration files, publish them using Artisan:
 
-bash
+bash/cmd
 php artisan vendor:publish --provider="addispayiPixel\AddisPaySDK\Providers\AddisPayServiceProvider" --tag=config
 
 
@@ -1091,7 +1091,7 @@ To ensure the SDK functions correctly, comprehensive tests are included. Follow 
 
 Ensure all development dependencies are installed via Composer.
 
-bash
+bash/cmd
 composer install
 
 
@@ -1099,7 +1099,7 @@ composer install
 
 Execute the PHPUnit tests using the following command:
 
-bash
+bash/cmd
 vendor/bin/phpunit
 
 
@@ -1240,7 +1240,7 @@ Click the ##Fork## button at the top-right corner of the repository page to crea
 
 ## 2. Clone the Forked Repository
 
-bash
+bash/cmd
 git clone https://github.com/your-username/addispay-sdk.git
 cd addispay-sdk
 
@@ -1249,7 +1249,7 @@ cd addispay-sdk
 
 Create a new branch for your feature or bug fix.
 
-bash
+bash/cmd
 git checkout -b feature/add-new-feature
 
 
@@ -1259,14 +1259,14 @@ Implement your feature or fix the bug in the new branch.
 
 ## 5. Commit Your Changes
 
-bash
+bash/cmd
 git add .
 git commit -m "Add new feature: Description of the feature"
 
 
 ## 6. Push to the Branch
 
-bash
+bash/cmd
 git push origin feature/add-new-feature
 
 
@@ -1277,8 +1277,6 @@ Navigate to the original repository and click on ##Compare & pull request##. Pro
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
 
 ## Additional Information
 
@@ -1292,15 +1290,15 @@ Follow [Semantic Versioning](https://semver.org/) to manage your package version
 
 ## 3. Security
 
-- ##Environment Variables##: Always use environment variables to store sensitive information like API keys. Do not hardcode them.
+- Environment Variables##: Always use environment variables to store sensitive information like API keys. Do not hardcode them.
   
-- ##Encryption##: Ensure that encryption and decryption mechanisms are securely implemented to protect sensitive data.
+- Encryption##: Ensure that encryption and decryption mechanisms are securely implemented to protect sensitive data.
 
 ## 4. Continuous Integration (CI)
 
 Consider setting up CI/CD pipelines (e.g., GitHub Actions) to automate testing and deployment processes. This ensures code quality and streamlines the release process.
 
-##Example GitHub Actions Workflow: `.github/workflows/ci.yml`##
+Example GitHub Actions Workflow: `.github/workflows/ci.yml`##
 
 yaml
 name: CI
@@ -1337,31 +1335,33 @@ jobs:
 
 This error typically occurs when the `vendor` directory does not exist because dependencies haven't been installed yet.
 
-##Solution:##
+##  Solution:
 
-1. ##Install Dependencies##
+1. ##  Install Dependencies
 
    Run the following command to install all required dependencies:
 
-   bash
+   bash/cmd
+
    composer install
    
 
-2. ##Verify Composer Installation##
+2. ##  Verify Composer Installation
 
    Ensure that Composer is installed correctly by checking its version:
 
-   bash
+   bash/cmd 
+
    composer --version
    
 
    If Composer is not installed, download and install it from the [Composer website](https://getcomposer.org/download/).
 
-3. ##Check `composer.json`##
+3. ##  Check `composer.json`##
 
    Ensure that your `composer.json` file is correctly configured. You can validate it using:
 
-   bash/cmd
+   bash/cmd/cmd
    
 composer validate
    
@@ -1374,13 +1374,14 @@ On Windows, you might need to adjust the PHPUnit command.
 
 Use backslashes or specify the full path to `phpunit.exe` if available.
 
-bash
+bash/cmd
 vendor\bin\phpunit
 
 
 Or, if you have PHPUnit installed globally:
 
-bash
+bash/cmd
+
 phpunit
 
 
