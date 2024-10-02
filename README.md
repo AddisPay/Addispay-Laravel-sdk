@@ -247,7 +247,6 @@ class PaymentController extends Controller
     {
         return view('payment.cancel');
     }
-
     /
      * Handle the payment error callback.
      */
@@ -255,7 +254,6 @@ class PaymentController extends Controller
     {
         return view('payment.error');
     }
-
     /
      * Handle the payment callback (generic).
      */
