@@ -2,7 +2,7 @@
 
 A comprehensive Laravel SDK for integrating the AddisPay payment gateway into your Laravel applications. This SDK simplifies the process of initiating payments, handling callbacks, and managing secure data transmission with robust encryption mechanisms.
 
-## Table of Contents
+ Table of Contents
 
 - [Features](#features)
 - [Installation](#installation)
@@ -17,15 +17,15 @@ A comprehensive Laravel SDK for integrating the AddisPay payment gateway into yo
 - [Contributing](#contributing)
 - [License](#license)
 
-## Features
+ Features
 
-- Seamless Payment Initiation##: Easily create and initiate payment orders.
-- Secure Data Handling##: Encrypt and decrypt sensitive data using RSA encryption.
-- Callback Management##: Handle success, cancellation, and error callbacks efficiently.
-- Robust Error Handling##: Manage and report errors gracefully.
-- Extensible and Maintainable##: Modular structure for easy enhancements and maintenance.
+- Seamless Payment Initiation: Easily create and initiate payment orders.
+- Secure Data Handling: Encrypt and decrypt sensitive data using RSA encryption.
+- Callback Management: Handle success, cancellation, and error callbacks efficiently.
+- Robust Error Handling: Manage and report errors gracefully.
+- Extensible and Maintainable: Modular structure for easy enhancements and maintenance.
 
-## Installation
+ Installation
 
 You can install the AddisPay SDK via Composer. Ensure that you have Composer installed on your system. If not, follow the [Composer installation guide](https://getcomposer.org/download/).
 
@@ -34,11 +34,11 @@ bash/cmd/cmd
 composer require addispay/addispay-sdk
 
 
-## Configuration
+ Configuration
 
 After installation, you need to publish the configuration file and set up your environment variables.
 
-## 1. Publish Configuration
+ 1. Publish Configuration
 
 Run the following Artisan command to publish the configuration file:
 
@@ -48,7 +48,7 @@ php artisan vendor:publish --provider="addispay\AddisPaySDK\Providers\AddisPaySe
 
 This will create a `config/addispay.php` file in your Laravel application's `config` directory.
 
-## 2. Set Environment Variables
+ 2. Set Environment Variables
 
 In your `.env` file, add the following variables with your AddisPay credentials and endpoints:
 
@@ -63,17 +63,17 @@ ADDISPAY_CALLBACK_API_URL=https://yourdomain.com/payment/callback
 
 Ensure that these values are correctly set to match your AddisPay account details and your application's URLs.
 
-## Usage
+ Usage
 
-## Initiate a Payment
+ Initiate a Payment
 
 To initiate a payment, use the `AddisPay` facade provided by the SDK. Below is an example of how to create a payment order in a controller.
 
-## 1. Create a Payment Form
+ 1. Create a Payment Form
 
 First, create a Blade view for your payment form where users can enter payment details.
 
-##`resources/views/payment/form.blade.php`##
+`resources/views/payment/form.blade.php`
 
 html
 <!DOCTYPE html>
@@ -123,11 +123,11 @@ html
 </html>
 
 
-## 2. Define Routes
+ 2. Define Routes
 
 Add routes for displaying the payment form, initiating the payment, and handling callbacks.
 
-##`routes/web.php`##
+`routes/web.php`
 
 php
 use App\Http\Controllers\PaymentController;
@@ -139,11 +139,11 @@ Route::get('/payment/callback', [PaymentController::class, 'paymentCallback'])->
 Route::get('/payment/error', [PaymentController::class, 'paymentError'])->name('payment.error');
 
 
-## 3. Create the Controller
+ 3. Create the Controller
 
 Create a controller to handle payment initiation and callbacks.
 
-##`app/Http/Controllers/PaymentController.php`##
+`app/Http/Controllers/PaymentController.php`
 
 php
 <?php
@@ -155,7 +155,7 @@ use addispayiPixel\AddisPaySDK\Facades\AddisPay;
 
 class PaymentController extends Controller
 {
-    /##
+    /
      * Show the payment form.
      */
     public function showPaymentForm()
@@ -163,7 +163,7 @@ class PaymentController extends Controller
         return view('payment.form');
     }
 
-    /##
+    /
      * Initiate the payment.
      */
     public function initiatePayment(Request $request)
@@ -213,7 +213,7 @@ class PaymentController extends Controller
         }
     }
 
-    /##
+    /
      * Handle the payment success callback.
      */
     public function paymentSuccess(Request $request)
@@ -240,7 +240,7 @@ class PaymentController extends Controller
         }
     }
 
-    /##
+    /
      * Handle the payment cancellation callback.
      */
     public function paymentCancel()
@@ -248,7 +248,7 @@ class PaymentController extends Controller
         return view('payment.cancel');
     }
 
-    /##
+    /
      * Handle the payment error callback.
      */
     public function paymentError()
@@ -256,7 +256,7 @@ class PaymentController extends Controller
         return view('payment.error');
     }
 
-    /##
+    /
      * Handle the payment callback (generic).
      */
     public function paymentCallback(Request $request)
@@ -268,15 +268,15 @@ class PaymentController extends Controller
 }
 
 
-## Handle Callbacks
+ Handle Callbacks
 
 After a payment is processed, AddisPay will redirect users to the specified `success_url`, `cancel_url`, or `error_url`. Ensure your controller methods handle these callbacks appropriately.
 
-## Step 4: Implement the SDK Classes
+ Step 4: Implement the SDK Classes
 
 Ensure all SDK classes are properly implemented to handle API requests, encryption, and exceptions.
 
-## 1. `src/AddisPay.php`
+ 1. `src/AddisPay.php`
 
 The main SDK class that initializes the API client and handles payment creation.
 
@@ -301,7 +301,7 @@ class AddisPay
         $this->apiClient = new ApiClient($config['checkout_api_url'], $config['public_api_key'], $config['private_key']);
     }
 
-    /##
+    /
      * Create a payment order.
      *
      * @param array $paymentData
@@ -349,7 +349,7 @@ class AddisPay
         throw new AddisPayException("Invalid response from AddisPay API.");
     }
 
-    /##
+    /
      * Handle callback from AddisPay.
      *
      * @param array $callbackData
@@ -374,7 +374,7 @@ class AddisPay
 }
 
 
-## 2. `src/Config/config.php`
+ 2. `src/Config/config.php`
 
 Configuration settings for the SDK.
 
@@ -398,7 +398,7 @@ class Config
 }
 
 
-## 3. `src/Facades/AddisPay.php`
+ 3. `src/Facades/AddisPay.php`
 
 Facade for easy access to the SDK's methods.
 
@@ -418,7 +418,7 @@ class AddisPay extends Facade
 }
 
 
-## 4. `src/Providers/AddisPayServiceProvider.php`
+ 4. `src/Providers/AddisPayServiceProvider.php`
 
 Service provider to register the SDK in the Laravel application.
 
@@ -432,7 +432,7 @@ use addispayiPixel\AddisPaySDK\AddisPay;
 
 class AddisPayServiceProvider extends ServiceProvider
 {
-    /##
+    /
      * Register the application services.
      */
     public function register()
@@ -443,7 +443,7 @@ class AddisPayServiceProvider extends ServiceProvider
         });
     }
 
-    /##
+    /
      * Bootstrap the application services.
      */
     public function boot()
@@ -456,7 +456,7 @@ class AddisPayServiceProvider extends ServiceProvider
 }
 
 
-## 5. `src/Exceptions/AddisPayException.php`
+ 5. `src/Exceptions/AddisPayException.php`
 
 Custom exception class for the SDK.
 
@@ -472,7 +472,7 @@ class AddisPayException extends Exception
 }
 
 
-## 6. `src/ApiClient.php`
+ 6. `src/ApiClient.php`
 
 Handles HTTP requests to the AddisPay API.
 
@@ -498,7 +498,7 @@ class ApiClient
         $this->apiSecret = $apiSecret;
     }
 
-    /##
+    /
      * Send a POST request to the specified endpoint with data.
      *
      * @param string $endpoint
@@ -527,7 +527,7 @@ class ApiClient
 }
 
 
-## 7. `src/Encryption.php`
+ 7. `src/Encryption.php`
 
 Utility class for RSA encryption and decryption.
 
@@ -541,7 +541,7 @@ use addispayiPixel\AddisPaySDK\Exceptions\AddisPayException;
 
 class Encryption
 {
-    /##
+    /
      * Encrypt data using the provided public key.
      *
      * @param string $data
@@ -560,7 +560,7 @@ class Encryption
         }
     }
 
-    /##
+    /
      * Decrypt data using the provided private key.
      *
      * @param string $encryptedData
@@ -581,15 +581,15 @@ class Encryption
 }
 
 
-## Example Responses
+ Example Responses
 
-## HTML Responses
+ HTML Responses
 
 These are the Blade views that are returned to the user based on the payment outcome.
 
-## 1. Payment Success
+ 1. Payment Success
 
-##`resources/views/payment/success.blade.php`##
+`resources/views/payment/success.blade.php`
 
 html
 <!DOCTYPE html>
@@ -604,9 +604,9 @@ html
 </html>
 
 
-## 2. Payment Cancelled
+ 2. Payment Cancelled
 
-##`resources/views/payment/cancel.blade.php`##
+`resources/views/payment/cancel.blade.php`
 
 html
 <!DOCTYPE html>
@@ -621,9 +621,9 @@ html
 </html>
 
 
-## 3. Payment Error
+ 3. Payment Error
 
-##`resources/views/payment/error.blade.php`##
+`resources/views/payment/error.blade.php`
 
 html
 <!DOCTYPE html>
@@ -641,11 +641,11 @@ html
 </html>
 
 
-## Raw Postman Responses
+ Raw Postman Responses
 
 Below are example responses you might receive from the AddisPay API when creating a payment order.
 
-## 1. Successful Payment Creation
+ 1. Successful Payment Creation
 
 json
 {
@@ -657,7 +657,7 @@ json
 }
 
 
-## 2. Failed Payment Creation
+ 2. Failed Payment Creation
 
 json
 {
@@ -666,7 +666,7 @@ json
 }
 
 
-## 3. Validation Error
+ 3. Validation Error
 
 json
 {
@@ -675,11 +675,11 @@ json
 }
 
 
-## Testing
+ Testing
 
 To ensure the SDK functions correctly, comprehensive tests are included. Follow these steps to run the tests.
 
-## 1. Install Development Dependencies
+ 1. Install Development Dependencies
 
 Ensure all development dependencies are installed via Composer.
 
@@ -687,7 +687,7 @@ bash/cmd
 composer install
 
 
-## 2. Run PHPUnit Tests
+ 2. Run PHPUnit Tests
 
 Execute the PHPUnit tests using the following command:
 
@@ -695,13 +695,13 @@ bash/cmd
 vendor/bin/phpunit
 
 
-##Note:## On Windows, you might need to use `vendor\bin\phpunit` or `vendor/bin/phpunit.exe` depending on your setup.
+Note: On Windows, you might need to use `vendor\bin\phpunit` or `vendor/bin/phpunit.exe` depending on your setup.
 
-## 3. Sample Test Case
+ 3. Sample Test Case
 
 Here's an example of a PHPUnit test case for the SDK.
 
-##`tests/AddisPayTest.php`##
+`tests/AddisPayTest.php`
 
 php
 <?php
@@ -822,17 +822,17 @@ class AddisPayTest extends TestCase
 }
 
 
-## Example Usage of the SDK in a Laravel Application
+ Example Usage of the SDK in a Laravel Application
 
 Once your SDK is published on Packagist, merchants can integrate it into their Laravel applications as follows:
 
-## 1. Install the SDK via Composer
+ 1. Install the SDK via Composer
 
 bash/cmd
 composer require addispay/addispay-sdk
 
 
-## 2. Publish Configuration
+ 2. Publish Configuration
 
 If your SDK provides configuration files, publish them using Artisan:
 
@@ -842,7 +842,7 @@ php artisan vendor:publish --provider="addispayiPixel\AddisPaySDK\Providers\Addi
 
 This will create a `config/addispay.php` file where merchants can set their API keys and endpoints.
 
-## 3. Set Environment Variables
+ 3. Set Environment Variables
 
 In the `.env` file, add your AddisPay credentials:
 
@@ -854,7 +854,7 @@ ADDISPAY_RETURN_API_URL=https://yourdomain.com/payment/success
 ADDISPAY_CALLBACK_API_URL=https://yourdomain.com/payment/callback
 
 
-## 4. Register the Service Provider and Facade (If Not Auto-Discovered)
+ 4. Register the Service Provider and Facade (If Not Auto-Discovered)
 
 If your package supports Laravel's auto-discovery, you can skip this step. Otherwise, manually add to `config/app.php`:
 
@@ -870,11 +870,11 @@ php
 ],
 
 
-## 5. Use the SDK in Controllers
+ 5. Use the SDK in Controllers
 
 As shown earlier, merchants can use the `AddisPay` facade to create payments and handle callbacks.
 
-##Example Controller: `app/Http/Controllers/PaymentController.php`##
+Example Controller: `app/Http/Controllers/PaymentController.php`
 
 php
 <?php
@@ -886,7 +886,7 @@ use addispayiPixel\AddisPaySDK\Facades\AddisPay;
 
 class PaymentController extends Controller
 {
-    /##
+    /
      * Show the payment form.
      */
     public function showPaymentForm()
@@ -894,7 +894,7 @@ class PaymentController extends Controller
         return view('payment.form');
     }
 
-    /##
+    /
      * Initiate the payment.
      */
     public function initiatePayment(Request $request)
@@ -944,7 +944,7 @@ class PaymentController extends Controller
         }
     }
 
-    /##
+    /
      * Handle the payment success callback.
      */
     public function paymentSuccess(Request $request)
@@ -971,7 +971,7 @@ class PaymentController extends Controller
         }
     }
 
-    /##
+    /
      * Handle the payment cancellation callback.
      */
     public function paymentCancel()
@@ -979,7 +979,7 @@ class PaymentController extends Controller
         return view('payment.cancel');
     }
 
-    /##
+    /
      * Handle the payment error callback.
      */
     public function paymentError()
@@ -989,15 +989,15 @@ class PaymentController extends Controller
 }
 
 
-## Example Responses
+ Example Responses
 
-## HTML Responses
+ HTML Responses
 
 These are the Blade views that are returned to the user based on the payment outcome.
 
-## 1. Payment Success
+ 1. Payment Success
 
-##`resources/views/payment/success.blade.php`##
+`resources/views/payment/success.blade.php`
 
 html
 <!DOCTYPE html>
@@ -1012,9 +1012,9 @@ html
 </html>
 
 
-## 2. Payment Cancelled
+ 2. Payment Cancelled
 
-##`resources/views/payment/cancel.blade.php`##
+`resources/views/payment/cancel.blade.php`
 
 html
 <!DOCTYPE html>
@@ -1029,9 +1029,9 @@ html
 </html>
 
 
-## 3. Payment Error
+ 3. Payment Error
 
-##`resources/views/payment/error.blade.php`##
+`resources/views/payment/error.blade.php`
 
 html
 <!DOCTYPE html>
@@ -1049,11 +1049,11 @@ html
 </html>
 
 
-## Raw Postman Responses
+ Raw Postman Responses
 
 Below are example responses you might receive from the AddisPay API when creating a payment order.
 
-## 1. Successful Payment Creation
+ 1. Successful Payment Creation
 
 json
 {
@@ -1065,7 +1065,7 @@ json
 }
 
 
-## 2. Failed Payment Creation
+ 2. Failed Payment Creation
 
 json
 {
@@ -1074,7 +1074,7 @@ json
 }
 
 
-## 3. Validation Error
+ 3. Validation Error
 
 json
 {
@@ -1083,11 +1083,11 @@ json
 }
 
 
-## Testing
+ Testing
 
 To ensure the SDK functions correctly, comprehensive tests are included. Follow these steps to run the tests.
 
-## 1. Install Development Dependencies
+ 1. Install Development Dependencies
 
 Ensure all development dependencies are installed via Composer.
 
@@ -1095,7 +1095,7 @@ bash/cmd
 composer install
 
 
-## 2. Run PHPUnit Tests
+ 2. Run PHPUnit Tests
 
 Execute the PHPUnit tests using the following command:
 
@@ -1103,13 +1103,13 @@ bash/cmd
 vendor/bin/phpunit
 
 
-##Note:## On Windows, you might need to use `vendor\bin\phpunit` or `vendor/bin/phpunit.exe` depending on your setup.
+Note: On Windows, you might need to use `vendor\bin\phpunit` or `vendor/bin/phpunit.exe` depending on your setup.
 
-## 3. Sample Test Case
+ 3. Sample Test Case
 
 Here's an example of a PHPUnit test case for the SDK.
 
-##`tests/AddisPayTest.php`##
+`tests/AddisPayTest.php`
 
 php
 <?php
@@ -1230,22 +1230,22 @@ class AddisPayTest extends TestCase
 }
 
 
-## Contributing
+ Contributing
 
 Contributions are welcome! Please follow these guidelines to contribute to the AddisPay Laravel SDK.
 
-## 1. Fork the Repository
+ 1. Fork the Repository
 
-Click the ##Fork## button at the top-right corner of the repository page to create a copy of the repository under your GitHub account.
+Click the Fork button at the top-right corner of the repository page to create a copy of the repository under your GitHub account.
 
-## 2. Clone the Forked Repository
+ 2. Clone the Forked Repository
 
 bash/cmd
-git clone https://github.com/your-username/addispay-sdk.git
+git clone https://github.com/addispay/addispay-sdk.git
 cd addispay-sdk
 
 
-## 3. Create a New Branch
+ 3. Create a New Branch
 
 Create a new branch for your feature or bug fix.
 
@@ -1253,52 +1253,52 @@ bash/cmd
 git checkout -b feature/add-new-feature
 
 
-## 4. Make Your Changes
+ 4. Make Your Changes
 
 Implement your feature or fix the bug in the new branch.
 
-## 5. Commit Your Changes
+ 5. Commit Your Changes
 
 bash/cmd
 git add .
 git commit -m "Add new feature: Description of the feature"
 
 
-## 6. Push to the Branch
+ 6. Push to the Branch
 
 bash/cmd
 git push origin feature/add-new-feature
 
 
-## 7. Create a Pull Request
+ 7. Create a Pull Request
 
-Navigate to the original repository and click on ##Compare & pull request##. Provide a clear description of your changes and submit the pull request.
+Navigate to the original repository and click on Compare & pull request. Provide a clear description of your changes and submit the pull request.
 
-## License
+ License
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Additional Information
+ Additional Information
 
-## 1. Namespace Consistency
+ 1. Namespace Consistency
 
 Ensure that the namespaces in your PHP files match the `psr-4` autoloading paths defined in `composer.json`. This ensures that classes are autoloaded correctly.
 
-## 2. Versioning
+ 2. Versioning
 
 Follow [Semantic Versioning](https://semver.org/) to manage your package versions. Use tags like `v1.0.0`, `v1.1.0`, etc., to denote releases.
 
-## 3. Security
+ 3. Security
 
-- Environment Variables##: Always use environment variables to store sensitive information like API keys. Do not hardcode them.
+- Environment Variables: Always use environment variables to store sensitive information like API keys. Do not hardcode them.
   
-- Encryption##: Ensure that encryption and decryption mechanisms are securely implemented to protect sensitive data.
+- Encryption: Ensure that encryption and decryption mechanisms are securely implemented to protect sensitive data.
 
-## 4. Continuous Integration (CI)
+ 4. Continuous Integration (CI)
 
 Consider setting up CI/CD pipelines (e.g., GitHub Actions) to automate testing and deployment processes. This ensures code quality and streamlines the release process.
 
-Example GitHub Actions Workflow: `.github/workflows/ci.yml`##
+Example GitHub Actions Workflow: `.github/workflows/ci.yml`
 
 yaml
 name: CI
@@ -1329,15 +1329,15 @@ jobs:
       run: vendor/bin/phpunit
 
 
-## 5. Troubleshooting
+ 5. Troubleshooting
 
-## `'vendor' is not recognized as an internal or external command`
+ `'vendor' is not recognized as an internal or external command`
 
 This error typically occurs when the `vendor` directory does not exist because dependencies haven't been installed yet.
 
-##  Solution:
+  Solution:
 
-1. ##  Install Dependencies
+1.   Install Dependencies
 
    Run the following command to install all required dependencies:
 
@@ -1346,7 +1346,7 @@ This error typically occurs when the `vendor` directory does not exist because d
    composer install
    
 
-2. ##  Verify Composer Installation
+2.   Verify Composer Installation
 
    Ensure that Composer is installed correctly by checking its version:
 
@@ -1357,7 +1357,7 @@ This error typically occurs when the `vendor` directory does not exist because d
 
    If Composer is not installed, download and install it from the [Composer website](https://getcomposer.org/download/).
 
-3. ##  Check `composer.json`##
+3.   Check `composer.json`
 
    Ensure that your `composer.json` file is correctly configured. You can validate it using:
 
@@ -1366,11 +1366,11 @@ This error typically occurs when the `vendor` directory does not exist because d
 composer validate
    
 
-## Running PHPUnit on Windows
+ Running PHPUnit on Windows
 
 On Windows, you might need to adjust the PHPUnit command.
 
-## Solution:
+ Solution:
 
 Use backslashes or specify the full path to `phpunit.exe` if available.
 
@@ -1385,10 +1385,10 @@ bash/cmd
 phpunit
 
 
-## Conclusion
+ Conclusion
 
 By following the steps outlined above, you can successfully integrate the AddisPay payment gateway into your Laravel applications using the AddisPay Laravel SDK. This SDK abstracts the complexities of API interactions, providing a streamlined and secure method for handling payments.
 
 For any issues or feature requests, please open an issue on the [GitHub repository](https://github.com/addispay/addispay-sdk/issues).
 
-## Happy Coding!
+ Happy Coding!
